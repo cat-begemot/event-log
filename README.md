@@ -1,4 +1,4 @@
-[![Create release and publish NuGet](https://github.com/cat-begemot/event-log/actions/workflows/release_and_publish.yml/badge.svg)](https://github.com/cat-begemot/event-log/actions/workflows/release_and_publish.yml)
+[![Create release and publish NuGet](https://github.com/cat-begemot/event-log/actions/workflows/release-and-publish.yml/badge.svg)](https://github.com/cat-begemot/event-log/actions/workflows/release-and-publish.yml)
 ![LastNuGetVersion](https://img.shields.io/nuget/v/AHSW.EventLog)
 ![NugetDownloads](https://img.shields.io/nuget/dt/AHSW.EventLog)
 
