@@ -8,11 +8,6 @@ on:
 permissions:
   contents: write
 
-env:
-  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
-  DOTNET_NOLOGO: true
-  NuGetDirectory: ${{ github.workspace}}/nuget
-
 jobs:
   setup_env_vars:
     name: Set environment variables
@@ -40,13 +35,13 @@ jobs:
         shell: pwsh
         run: dotnet test --configuration Release .\src\EventLog.UnitTests
   
-  compare_strings:
+  check_version:
     name: Check project version
     needs: setup_env_vars
-    runs-on: ${{ needs.setup_env_vars.outputs.runner_image }}
     if: ${{ success() && github.event.repository.fork == false }}
+    runs-on: ${{ needs.setup_env_vars.outputs.runner_image }}
     outputs:
-      is_release: ${{ steps.compare_versions.outputs.is_release }}
+      is_valid: ${{ steps.compare_versions.outputs.is_valid }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -59,8 +54,8 @@ jobs:
         run: |
           git fetch --tags
           LATEST_TAG=$(git tag -l "v*" --sort=-v:refname | head -n 1)
-          echo "LATEST_TAG=$LATEST_TAG" >> $GITHUB_ENV
           echo "Latest tag: $LATEST_TAG"
+          echo "LATEST_TAG=$LATEST_TAG" >> $GITHUB_ENV
 
       - name: Compare Strings
         id: compare_versions
@@ -68,21 +63,17 @@ jobs:
           GREATER_VERSION=$(printf "%s\n%s" "$VERSION" "${LATEST_TAG#v}" | sort -V | tail -n 1)
           if [[ "$VERSION" == "$GREATER_VERSION" && "$VERSION" != "${LATEST_TAG#v}" ]]; then
             echo "The new release version is ${LATEST_TAG#v}"
-            IS_RELEASE=true
-            echo "is_release=true" >> $GITHUB_OUTPUT
+            echo "is_valid=true" >> $GITHUB_OUTPUT
           else
             echo "The project version is not incremented"
-            echo "is_release=false" >> $GITHUB_OUTPUT
+            echo "is_valid=false" >> $GITHUB_OUTPUT
           fi
   
   tag_and_push:
     name: Create and push release tag
     runs-on: ${{ needs.setup_env_vars.outputs.runner_image }}
-    needs: [run_test, compare_strings]
-    if: ${{ success() && needs.compare_strings.outputs.is_release == 'true' }}
-    env:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      tag: ${{ github.ref_name }}
+    needs: [run_test, check_version]
+    if: ${{ success() && needs.check_version.outputs.is_valid == 'true' }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -111,9 +102,6 @@ jobs:
     runs-on: ${{ needs.setup_env_vars.outputs.runner_image }}
     needs: tag_and_push
     if: success()
-    env:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      tag: ${{ github.ref_name }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -136,6 +124,8 @@ jobs:
     runs-on: ${{ needs.setup_env_vars.outputs.runner_image }}
     needs: tag_and_push
     if: success()
+    env:
+      NuGetDirectory: ${{ github.workspace}}/nuget
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -159,6 +149,8 @@ jobs:
     runs-on: ${{ needs.setup_env_vars.outputs.runner_image }}
     needs: create_nuget
     if: success()
+    env:
+      NuGetDirectory: ${{ github.workspace}}/nuget
     steps:
       - name: Download artifact
         uses: actions/download-artifact@v4

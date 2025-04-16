@@ -14,7 +14,7 @@
     <PackageId>AHSW.EventLog</PackageId>
     <Version>1.9.1</Version>
     <Authors>Alex Holenko</Authors>
-    
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <AssemblyTitle>Library for capturing application events, storing diagnostic data, and tracking domain model states</AssemblyTitle>
     <Title>Library for capturing application events, storing diagnostic data, and tracking domain model states</Title>
     <Description>
