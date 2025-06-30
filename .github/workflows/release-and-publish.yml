@@ -100,7 +100,7 @@ jobs:
   release:
     name: Create release
     runs-on: ${{ needs.setup_env_vars.outputs.runner_image }}
-    needs: tag_and_push
+    needs: [tag_and_push, setup_env_vars]
     if: success()
     steps:
       - name: Checkout repository
@@ -122,7 +122,7 @@ jobs:
   create_nuget:
     name: Create NuGet
     runs-on: ${{ needs.setup_env_vars.outputs.runner_image }}
-    needs: tag_and_push
+    needs: [tag_and_push, setup_env_vars]
     if: success()
     env:
       NuGetDirectory: ${{ github.workspace}}/nuget
@@ -147,7 +147,7 @@ jobs:
   deploy:
     name: Deploy NuGet
     runs-on: ${{ needs.setup_env_vars.outputs.runner_image }}
-    needs: create_nuget
+    needs: [create_nuget, setup_env_vars]
     if: success()
     env:
       NuGetDirectory: ${{ github.workspace}}/nuget
