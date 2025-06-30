@@ -71,9 +71,9 @@ jobs:
   
   tag_and_push:
     name: Create and push release tag
-    runs-on: ${{ needs.setup_env_vars.outputs.runner_image }}
     needs: [run_test, check_version]
     if: ${{ success() && needs.check_version.outputs.is_valid == 'true' }}
+    runs-on: ${{ needs.setup_env_vars.outputs.runner_image }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
