@@ -71,7 +71,7 @@ jobs:
   
   tag_and_push:
     name: Create and push release tag
-    needs: [run_test, check_version]
+    needs: [run_test, check_version, setup_env_vars]
     if: ${{ success() && needs.check_version.outputs.is_valid == 'true' }}
     runs-on: ${{ needs.setup_env_vars.outputs.runner_image }}
     steps:
