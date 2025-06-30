@@ -107,6 +107,8 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Create GitHub release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           git fetch --tags
           NEW_TAG=$(git describe --tags --abbrev=0 origin/master)
