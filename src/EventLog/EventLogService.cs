@@ -19,7 +19,7 @@ public class EventLogService<TEventType, TEntityType, TPropertyType> :
 
 {
     private static EventLogConfiguration<TEventType, TEntityType, TPropertyType> _logConfiguration;
-    private static JsonSerializerOptions _serializerOptions;
+    private static readonly JsonSerializerOptions _serializerOptions;
     
     private readonly IApplicationRepository _applicationRepository;
 
@@ -36,10 +36,11 @@ public class EventLogService<TEventType, TEntityType, TPropertyType> :
         _applicationRepository = applicationRepository;
     }
     
-    public static void Configure(Action<IEventLogConfigurator<TEventType, TEntityType, TPropertyType>> configurationBuilder = null)
+    public static async Task ConfigureAsync(Func<IEventLogConfigurator<TEventType, TEntityType, TPropertyType>, Task> configurationBuilder = null)
     {
+        ArgumentNullException.ThrowIfNull(configurationBuilder);
         _logConfiguration = new EventLogConfiguration<TEventType, TEntityType, TPropertyType>();
-        configurationBuilder?.Invoke(_logConfiguration);
+        await configurationBuilder.Invoke(_logConfiguration);
     }
 
     EventLogConfiguration<TEventType, TEntityType, TPropertyType> IEventLog<TEventType, TEntityType, TPropertyType>.Configuration => _logConfiguration;

@@ -17,54 +17,56 @@ internal static class Program
         const int userId = 3;
         const int bookCount = 2;
         
-        var host = Host.Create(recreateDatabase, context =>
+        var host = await Host.CreateAsync(recreateDatabase, async context =>
         {
-            EventLogService<EventType, EntityType, PropertyType>.Configure(
-                configurationBuilder => configurationBuilder
-                    .UseCustomTypeDescriptions(context,
-                        options => options
-                            .AddEventTypeDescription(EventType.AddBooksOnShelf, "Add books")
-                            .AddEventTypeDescription(EventType.UpdateBooksOnShelf, "Update books")
-                            .AddEventTypeDescription(EventType.AddShelf, "Add shelf")
-                            
-                            .AddEntityTypeDescription(EntityType.Book, "Book")
-                            .AddEntityTypeDescription(EntityType.Shelf, "Shelf")
-                            
-                            .AddPropertyTypeDescription(PropertyType.BookTitle, "Title")
-                            .AddPropertyTypeDescription(PropertyType.BookCondition, "Condition")
-                            .AddPropertyTypeDescription(PropertyType.BookLabels, "Labels")
-                            .AddPropertyTypeDescription(PropertyType.BookPublished, "Published")
-                            .AddPropertyTypeDescription(PropertyType.BookFirstSale, "FirstSale")
-                            .AddPropertyTypeDescription(PropertyType.BookIsAvailable, "IsAvailable")
-                            .AddPropertyTypeDescription(PropertyType.BookLikeCount, "LikeCount")
-                            .AddPropertyTypeDescription(PropertyType.BookPrice, "Price")
-                            .AddPropertyTypeDescription(PropertyType.ShelfHeight, "Height")
-                    )
-                    .RegisterEntity<BookEntity>(EntityType.Book, x => ((BookEntity)x).Id,
-                        options => options
-                            .RegisterProperty(PropertyType.BookTitle,
-                                x => x.Title, nameof(BookEntity.Title))
-                            .RegisterProperty(PropertyType.BookCondition,
-                                x => (int)x.Condition, nameof(BookEntity.Condition))
-                            .RegisterProperty(PropertyType.BookLabels,
-                                x => (int?)x.Labels, nameof(BookEntity.Labels))
-                            .RegisterProperty(PropertyType.BookPublished,
-                                x => x.Published, nameof(BookEntity.Published))
-                            .RegisterProperty(PropertyType.BookFirstSale,
-                                x => x.FirstSale, nameof(BookEntity.FirstSale))
-                            .RegisterProperty(PropertyType.BookIsAvailable,
-                                x => x.IsAvailable, nameof(BookEntity.IsAvailable))
-                            .RegisterProperty(PropertyType.BookLikeCount,
-                                x => x.LikeCount, nameof(BookEntity.LikeCount))
-                            .RegisterProperty(PropertyType.BookPrice,
-                                x => x.Price, nameof(BookEntity.Price))
-                    )
-                    .RegisterEntity<ShelfEntity>(EntityType.Shelf, x => ((ShelfEntity)x).Id,
-                        options => options
-                            .RegisterProperty(PropertyType.ShelfHeight,
-                                x => x.Height, nameof(ShelfEntity.Height))
-                    )
-            );
+            await EventLogService<EventType, EntityType, PropertyType>.ConfigureAsync(
+                async configurationBuilder =>
+                {
+                    await configurationBuilder
+                        .UseCustomTypeDescriptionsAsync(context,
+                            options => options
+                                .AddEventTypeDescription(EventType.AddBooksOnShelf, "Add books")
+                                .AddEventTypeDescription(EventType.UpdateBooksOnShelf, "Update books")
+                                .AddEventTypeDescription(EventType.AddShelf, "Add shelf")
+                                .AddEntityTypeDescription(EntityType.Book, "Book")
+                                .AddEntityTypeDescription(EntityType.Shelf, "Shelf")
+                                .AddPropertyTypeDescription(PropertyType.BookTitle, "Title")
+                                .AddPropertyTypeDescription(PropertyType.BookCondition, "Condition")
+                                .AddPropertyTypeDescription(PropertyType.BookLabels, "Labels")
+                                .AddPropertyTypeDescription(PropertyType.BookPublished, "Published")
+                                .AddPropertyTypeDescription(PropertyType.BookFirstSale, "FirstSale")
+                                .AddPropertyTypeDescription(PropertyType.BookIsAvailable, "IsAvailable")
+                                .AddPropertyTypeDescription(PropertyType.BookLikeCount, "LikeCount")
+                                .AddPropertyTypeDescription(PropertyType.BookPrice, "Price")
+                                .AddPropertyTypeDescription(PropertyType.ShelfHeight, "Height")
+                        );
+                    
+                    configurationBuilder
+                        .RegisterEntity<BookEntity>(EntityType.Book, x => ((BookEntity)x).Id,
+                            options => options
+                                .RegisterProperty(PropertyType.BookTitle,
+                                    x => x.Title, nameof(BookEntity.Title))
+                                .RegisterProperty(PropertyType.BookCondition,
+                                    x => (int)x.Condition, nameof(BookEntity.Condition))
+                                .RegisterProperty(PropertyType.BookLabels,
+                                    x => (int?)x.Labels, nameof(BookEntity.Labels))
+                                .RegisterProperty(PropertyType.BookPublished,
+                                    x => x.Published, nameof(BookEntity.Published))
+                                .RegisterProperty(PropertyType.BookFirstSale,
+                                    x => x.FirstSale, nameof(BookEntity.FirstSale))
+                                .RegisterProperty(PropertyType.BookIsAvailable,
+                                    x => x.IsAvailable, nameof(BookEntity.IsAvailable))
+                                .RegisterProperty(PropertyType.BookLikeCount,
+                                    x => x.LikeCount, nameof(BookEntity.LikeCount))
+                                .RegisterProperty(PropertyType.BookPrice,
+                                    x => x.Price, nameof(BookEntity.Price))
+                        )
+                        .RegisterEntity<ShelfEntity>(EntityType.Shelf, x => ((ShelfEntity)x).Id,
+                            options => options
+                                .RegisterProperty(PropertyType.ShelfHeight,
+                                    x => x.Height, nameof(ShelfEntity.Height))
+                        );
+                });
         });
         
         var services = GetServices(host.Services);

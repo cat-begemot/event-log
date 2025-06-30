@@ -10,7 +10,7 @@ namespace Bookstore.Sample.Configurations;
 
 internal static class Host
 {
-    public static IHost Create(bool recreateDatabase, Action<BookstoreDbContext> configureEventLog)
+    public static async Task<IHost> CreateAsync(bool recreateDatabase, Func<BookstoreDbContext, Task> configureEventLog)
     {
         var host = CreateHostBuilder().Build();
         
@@ -19,7 +19,7 @@ internal static class Host
         
         ApplyPendingMigrations(context, recreateDatabase);
 
-        configureEventLog(context);
+        await configureEventLog(context);
         
         return host;
     }

@@ -12,7 +12,7 @@
   <PropertyGroup>
     <!--Nuget properties-->
     <PackageId>AHSW.EventLog</PackageId>
-    <Version>1.9.1</Version>
+    <Version>1.9.2</Version>
     <Authors>Alex Holenko</Authors>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <AssemblyTitle>Library for capturing application events, storing diagnostic data, and tracking domain model states</AssemblyTitle>

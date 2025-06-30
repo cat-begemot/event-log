@@ -23,7 +23,7 @@ public class EventLogConfiguration<TEventType, TEntityType, TPropertyType> :
     private readonly Dictionary<Type, TEntityType> _entityTypes = new();
     private readonly Dictionary<TPropertyType, IPropertyInfo> _propertyInfos = new();
     
-    public IEntityConfigurator<TEntityType, TPropertyType> UseCustomTypeDescriptions(DbContext context,
+    public async Task<IEntityConfigurator<TEntityType, TPropertyType>> UseCustomTypeDescriptionsAsync(DbContext context,
         Action<ITypeDescriptionsConfigurator<TEventType, TEntityType, TPropertyType>> optionsBuilder)
     {
         var configurator = CreateDefaultTypeDescriptionsConfiguration();
@@ -41,11 +41,11 @@ public class EventLogConfiguration<TEventType, TEntityType, TPropertyType> :
         foreach (var pair in configurator.EventStatusDescriptions)
             _eventStatusDescriptions[pair.Key] = pair.Value;
         
-        FillCustomDescriptionTables(context);
+        await FillCustomDescriptionTables(context);
         
         return this;
     }
-    
+
     public IEntityConfigurator<TEntityType, TPropertyType> RegisterEntity<TEntity>(
         TEntityType entityType, Func<object, int> getId, Action<IPropertyConfigurator<TEntity, TPropertyType>> optionsBuilder)
             where TEntity : class
@@ -99,24 +99,24 @@ public class EventLogConfiguration<TEventType, TEntityType, TPropertyType> :
         throw new Exception($"Not found a registered property for the {nameof(TPropertyType)}.{propertyType}");
     }
     
-    private void FillCustomDescriptionTables(DbContext databaseContext)
+    private async Task FillCustomDescriptionTables(DbContext databaseContext)
     {
-        UpdateStorage<TEventType, EventTypeDescription>(_eventTypeDescriptions);
-        UpdateStorage<TEntityType, EntityTypeDescription>(_entityTypeDescriptions);
-        UpdateStorage<TPropertyType, PropertyTypeDescription>(_propertyTypeDescriptions);
-        UpdateStorage<EventStatus, EventStatusDescription>(_eventStatusDescriptions);
+        await UpdateStorage<TEventType, EventTypeDescription>(_eventTypeDescriptions);
+        await UpdateStorage<TEntityType, EntityTypeDescription>(_entityTypeDescriptions);
+        await UpdateStorage<TPropertyType, PropertyTypeDescription>(_propertyTypeDescriptions);
+        await UpdateStorage<EventStatus, EventStatusDescription>(_eventStatusDescriptions);
         
-        databaseContext.SaveChanges();
+        await databaseContext.SaveChangesAsync();
 
         return;
         
-        void UpdateStorage<TEnum, TDescriptiveEntity>(IReadOnlyDictionary<TEnum, string> descriptions)
+        async Task UpdateStorage<TEnum, TDescriptiveEntity>(IReadOnlyDictionary<TEnum, string> descriptions)
             where TDescriptiveEntity : BaseDescriptiveEntity, new()
             where TEnum : struct, Enum
         {
             var descriptionEntities = GetCustomEnumDescriptions<TEnum, TDescriptiveEntity>(descriptions);
-            databaseContext.Set<TDescriptiveEntity>().ExecuteDelete();
-            databaseContext.Set<TDescriptiveEntity>().AddRange(descriptionEntities);
+            await databaseContext.Set<TDescriptiveEntity>().ExecuteDeleteAsync();
+            await databaseContext.Set<TDescriptiveEntity>().AddRangeAsync(descriptionEntities);
         }
     }
     

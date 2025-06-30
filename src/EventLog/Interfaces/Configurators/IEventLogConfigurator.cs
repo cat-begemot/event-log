@@ -2,12 +2,12 @@
 
 namespace AHSW.EventLog.Interfaces.Configurators;
 
-public interface IEventLogConfigurator<in TEventType, in TEntityType, in TPropertyType>
+public interface IEventLogConfigurator<in TEventType, TEntityType, TPropertyType>
     where TEventType : struct, Enum
     where TEntityType : struct, Enum
     where TPropertyType : struct, Enum
 {
-    IEntityConfigurator<TEntityType, TPropertyType> UseCustomTypeDescriptions(DbContext context,
+    Task<IEntityConfigurator<TEntityType, TPropertyType>> UseCustomTypeDescriptionsAsync(DbContext context,
         Action<ITypeDescriptionsConfigurator<TEventType, TEntityType, TPropertyType>> optionsBuilder);
 
     IEntityConfigurator<TEntityType, TPropertyType> RegisterEntity<TEntity>(
