@@ -1,4 +1,7 @@
-﻿namespace AHSW.EventLog.Interfaces.Configurators;
+﻿using System;
+using System.Collections.Generic;
+
+namespace AHSW.EventLog.Interfaces.Configurators;
 
 public interface IEntityLogConfigurator<TEventType, TEntityType, in TPropertyType>
     where TEventType : struct, Enum

@@ -1,3 +1,4 @@
+using System;
 using AHSW.EventLog.Models.Entities.Abstract;
 
 namespace AHSW.EventLog.Models.Entities.PropertyLogEntries;

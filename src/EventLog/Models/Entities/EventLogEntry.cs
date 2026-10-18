@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using AHSW.EventLog.Models.Entities.Abstract;
 using AHSW.EventLog.Models.Enums;

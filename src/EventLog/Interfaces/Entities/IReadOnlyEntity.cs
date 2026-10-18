@@ -1,3 +1,5 @@
+using System;
+
 namespace AHSW.EventLog.Interfaces.Entities;
 
 public interface IReadOnlyEntity

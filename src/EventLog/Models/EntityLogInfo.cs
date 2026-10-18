@@ -1,3 +1,6 @@
+using System;
+using System.Collections.Generic;
+
 namespace AHSW.EventLog.Models;
 
 public record EntityLogInfo<TEntity, TPropertyType>(

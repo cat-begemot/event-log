@@ -1,4 +1,5 @@
-﻿using AHSW.EventLog.Repositories.Configuration;
+﻿using System;
+using AHSW.EventLog.Repositories.Configuration;
 using Microsoft.EntityFrameworkCore;
 
 namespace AHSW.EventLog.Repositories.Extensions;

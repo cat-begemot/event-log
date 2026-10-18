@@ -1,3 +1,4 @@
+using System;
 using AHSW.EventLog.Models.Enums;
 
 namespace AHSW.EventLog.Interfaces.Configurators;

@@ -1,3 +1,4 @@
+using System;
 using AHSW.EventLog.Models.Entities;
 using AHSW.EventLog.Repositories.Configuration.Abstract;
 using AHSW.EventLog.Repositories.Constants;

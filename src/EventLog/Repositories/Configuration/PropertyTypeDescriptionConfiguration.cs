@@ -1,4 +1,5 @@
-﻿using AHSW.EventLog.Models.Entities;
+﻿using System;
+using AHSW.EventLog.Models.Entities;
 using AHSW.EventLog.Repositories.Constants;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;

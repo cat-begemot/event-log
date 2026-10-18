@@ -1,3 +1,4 @@
+using System;
 using AHSW.EventLog.Interfaces;
 
 namespace AHSW.EventLog.Models;

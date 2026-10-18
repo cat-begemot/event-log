@@ -1,4 +1,4 @@
-using AHSW.EventLog.Models.Configurations;
+using System;
 using AHSW.EventLog.Models.Entities;
 
 namespace AHSW.EventLog.Models;

@@ -1,4 +1,6 @@
-﻿namespace AHSW.EventLog.Models.Entities.Abstract;
+﻿using System;
+
+namespace AHSW.EventLog.Models.Entities.Abstract;
 
 public abstract class ReadOnlyEntity : PkEntity
 {

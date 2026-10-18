@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using AHSW.EventLog.Interfaces.Configurators;
 using AHSW.EventLog.Models.Enums;
 

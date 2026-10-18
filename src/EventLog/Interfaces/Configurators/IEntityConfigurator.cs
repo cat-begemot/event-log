@@ -1,3 +1,5 @@
+using System;
+
 namespace AHSW.EventLog.Interfaces.Configurators;
 
 public interface IEntityConfigurator<in TEntityType, in TPropertyType>

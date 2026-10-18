@@ -1,4 +1,7 @@
-﻿using AHSW.EventLog.Interfaces;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using AHSW.EventLog.Interfaces;
 using AHSW.EventLog.Interfaces.Configurators;
 using AHSW.EventLog.Models.Entities;
 using AHSW.EventLog.Models.Entities.Abstract;

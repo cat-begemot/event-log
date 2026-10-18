@@ -1,3 +1,5 @@
+using System;
+using System.Threading.Tasks;
 using AHSW.EventLog.Models;
 
 namespace AHSW.EventLog.Interfaces;

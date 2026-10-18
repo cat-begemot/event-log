@@ -1,4 +1,5 @@
-﻿using AHSW.EventLog.Models.Entities.PropertyLogEntries;
+﻿using System;
+using AHSW.EventLog.Models.Entities.PropertyLogEntries;
 using AHSW.EventLog.Repositories.Configuration.Abstract;
 using AHSW.EventLog.Repositories.Constants;
 using Microsoft.EntityFrameworkCore;
