@@ -1,4 +1,4 @@
-﻿using AHSW.EventLog.Models.Entities.Abstract;
+﻿using AHSW.EventLog.Contracts.Models.Entities.Abstract;
 
 namespace Bookstore.Sample.Models;
 

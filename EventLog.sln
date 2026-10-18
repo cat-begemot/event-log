@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bookstore.Sample", "src\Boo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventLog.UnitTests", "src\EventLog.UnitTests\EventLog.UnitTests.csproj", "{FF8E4F68-15E0-4B75-A57F-55850385880D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventLog.Contracts", "src\EventLog.Contracts\EventLog.Contracts.csproj", "{2D841A40-31E7-49CB-AF5F-5ED794A398DA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,6 +20,10 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2D841A40-31E7-49CB-AF5F-5ED794A398DA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2D841A40-31E7-49CB-AF5F-5ED794A398DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2D841A40-31E7-49CB-AF5F-5ED794A398DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2D841A40-31E7-49CB-AF5F-5ED794A398DA}.Release|Any CPU.Build.0 = Release|Any CPU
 		{4744DEA2-EDD8-48F2-A935-797265E3F2BB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{4744DEA2-EDD8-48F2-A935-797265E3F2BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4744DEA2-EDD8-48F2-A935-797265E3F2BB}.Release|Any CPU.ActiveCfg = Release|Any CPU

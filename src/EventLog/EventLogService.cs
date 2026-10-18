@@ -3,13 +3,15 @@ using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using AHSW.EventLog.Contracts.Extensions;
+using AHSW.EventLog.Contracts.Interfaces;
+using AHSW.EventLog.Contracts.Models.Entities;
+using AHSW.EventLog.Contracts.Models.Enums;
 using AHSW.EventLog.Extensions;
 using AHSW.EventLog.Interfaces;
-using AHSW.EventLog.Interfaces.Configurators;
+using AHSW.EventLog.Interfaces.Configuration;
 using AHSW.EventLog.Models;
-using AHSW.EventLog.Models.Configurations;
-using AHSW.EventLog.Models.Entities;
-using AHSW.EventLog.Models.Enums;
+using AHSW.EventLog.Models.Configuration;
 
 namespace AHSW.EventLog;
 
@@ -51,7 +53,7 @@ public class EventLogService<TEventType, TEntityType, TPropertyType> :
     IApplicationRepository IEventLog<TEventType, TEntityType, TPropertyType>.ApplicationRepository => _applicationRepository;
     
     public async Task CreateEventScopeAndRun(TEventType eventLogType,
-        Func<EventLogScope<TEventType, TEntityType, TPropertyType>, Task> workUnitAction)
+        Func<IEventLogScope<TEventType, TEntityType, TPropertyType>, Task> workUnitAction)
     {
         var eventLogEntry = new EventLogEntry<TEventType, TEntityType, TPropertyType>(eventLogType);;
         
@@ -78,7 +80,7 @@ public class EventLogService<TEventType, TEntityType, TPropertyType> :
     }
     
     public async Task<TResult> CreateEventScopeAndRun<TResult>(TEventType eventLogType,
-        Func<EventLogScope<TEventType, TEntityType, TPropertyType>, Task<TResult>> workUnitAction)
+        Func<IEventLogScope<TEventType, TEntityType, TPropertyType>, Task<TResult>> workUnitAction)
     {
         var eventLogEntry = new EventLogEntry<TEventType, TEntityType, TPropertyType>(eventLogType);;
         

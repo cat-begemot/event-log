@@ -1,5 +1,5 @@
 ﻿using System;
-using AHSW.EventLog.Interfaces;
+using AHSW.EventLog.Contracts.Interfaces;
 using AHSW.EventLog.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;

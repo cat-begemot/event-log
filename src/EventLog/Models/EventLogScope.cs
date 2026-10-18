@@ -2,16 +2,20 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AHSW.EventLog.Contracts.Interfaces;
+using AHSW.EventLog.Contracts.Interfaces.Configurators;
+using AHSW.EventLog.Contracts.Models;
+using AHSW.EventLog.Contracts.Models.Entities;
 using AHSW.EventLog.Interfaces;
-using AHSW.EventLog.Models.Configurations;
-using AHSW.EventLog.Models.Entities;
+using AHSW.EventLog.Models.Configuration;
 
 namespace AHSW.EventLog.Models;
 
-public class EventLogScope<TEventType, TEntityType, TPropertyType>
-    where TEventType : struct, Enum
-    where TEntityType : struct, Enum
-    where TPropertyType : struct, Enum
+public class EventLogScope<TEventType, TEntityType, TPropertyType> :
+    IEventLogScope<TEventType, TEntityType, TPropertyType>
+        where TEventType : struct, Enum
+        where TEntityType : struct, Enum
+        where TPropertyType : struct, Enum
 {
     private readonly IEventLog<TEventType, TEntityType, TPropertyType> _eventLog;
 
@@ -23,15 +27,10 @@ public class EventLogScope<TEventType, TEntityType, TPropertyType>
         EventLogEntry = eventLogEntry;
     }
     
-    public EventLogEntry<TEventType,TEntityType,TPropertyType> EventLogEntry { get; }
-
-    /// <summary>
-    /// Executes a repository action and records logs according to the passed configuration
-    /// </summary>
-    /// <param name="repositoryActionAsync">A repository action which will be executed and logged</param>
-    /// <param name="optionsBuilder"></param>
+    public EventLogEntry<TEventType, TEntityType, TPropertyType> EventLogEntry { get; }
+    
     public async Task SaveAndLogEntitiesAsync(Func<Task> repositoryActionAsync,
-        Action<EntityLogConfiguration<TEventType, TEntityType, TPropertyType>> optionsBuilder = null)
+        Action<IEntityLogConfiguration<TEventType, TEntityType, TPropertyType>> optionsBuilder = null)
     {
         ArgumentNullException.ThrowIfNull(repositoryActionAsync);
         

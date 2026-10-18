@@ -1,7 +1,8 @@
 ﻿using AHSW.EventLog;
+using AHSW.EventLog.Contracts.Extensions;
+using AHSW.EventLog.Contracts.Interfaces;
+using AHSW.EventLog.Contracts.Models.Enums;
 using AHSW.EventLog.Extensions;
-using AHSW.EventLog.Interfaces;
-using AHSW.EventLog.Models.Enums;
 using Bookstore.Sample.Configurations;
 using Bookstore.Sample.Interfaces;
 using Bookstore.Sample.Models;

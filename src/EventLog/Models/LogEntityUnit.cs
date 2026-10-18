@@ -1,5 +1,5 @@
 using System;
-using AHSW.EventLog.Models.Entities;
+using AHSW.EventLog.Contracts.Models.Entities;
 
 namespace AHSW.EventLog.Models;
 

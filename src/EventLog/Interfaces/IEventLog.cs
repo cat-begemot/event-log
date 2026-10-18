@@ -1,5 +1,6 @@
 ﻿using System;
-using AHSW.EventLog.Models.Configurations;
+using AHSW.EventLog.Contracts.Interfaces;
+using AHSW.EventLog.Models.Configuration;
 
 namespace AHSW.EventLog.Interfaces;
 

@@ -21,6 +21,8 @@ The concept behind using EventLog is to gather information about application act
 
 * [Event Log](#event-log)
 * [Table of Contents](#table-of-contents)
+* [NuGet Packages](#nuget-packages)
+* [Migrating to the Contracts package](#migrating-to-the-contracts-package)
 * [Usage Example in Code](#1-usage-example-in-code)
 * [Database Result Output](#2-database-result-output)
 * [Sample Project](#3-sample-project)
@@ -33,6 +35,54 @@ The concept behind using EventLog is to gather information about application act
   * [Add EventLog recording](#46-add-eventlog-recording)
 * [Use SQL queries for log investigation](#5-use-sql-queries-for-log-investigation)
 * [Use log tables in any way in code for extend application functionality](#6-use-log-tables-in-any-way-in-code-for-extend-application-functionality)
+
+## NuGet Packages
+
+Both packages target .NET 10 and use the MIT license.
+
+| Package | Purpose |
+|---|---|
+| [AHSW.EventLog](https://www.nuget.org/packages/AHSW.EventLog) | Event logging implementation and Entity Framework Core integration. Includes a dependency on AHSW.EventLog.Contracts. |
+| [AHSW.EventLog.Contracts](https://www.nuget.org/packages/AHSW.EventLog.Contracts) | Shared service, scope, repository, and logging configuration interfaces; log entry models; enums; and failure logging extensions. Its initial version is 1.0.0 and it has no package dependencies. |
+
+Install the implementation to use EventLog in an application:
+
+```sh
+dotnet add package AHSW.EventLog
+```
+
+The Contracts package is installed automatically as a dependency. It can also be referenced independently:
+
+```sh
+dotnet add package AHSW.EventLog.Contracts --version 1.0.0
+```
+
+Application layers that consume `IEventLogService` can reference Contracts independently of EF Core. The application startup and persistence layers still need AHSW.EventLog to configure the service, register it with dependency injection, and map log tables. The examples below use the implementation package.
+
+The implementation package includes this README; the Contracts package includes its own [README](src/EventLog.Contracts/README.md). Both include the repository's LICENSE file. The release pipeline packs and publishes both packages through the existing EventLog release process; a new Contracts version alone does not trigger a release.
+
+## Migrating to the Contracts package
+
+The extraction changes public namespaces, assemblies, and callback signatures. It is a source and binary breaking change: update references and imports, then recompile all consumers. Treat an upgrade containing this extraction as a breaking release.
+
+| Types | Previous namespace | Current namespace |
+|---|---|---|
+| `IEventLogService`, `IApplicationRepository` | `AHSW.EventLog.Interfaces` | `AHSW.EventLog.Contracts.Interfaces` |
+| `IReadOnlyEntity` | `AHSW.EventLog.Interfaces.Entities` | `AHSW.EventLog.Contracts.Interfaces.Entities` |
+| `IEntityLogConfigurator`, `ITypeDescriptionsConfigurator` | `AHSW.EventLog.Interfaces.Configurators` | `AHSW.EventLog.Contracts.Interfaces.Configurators` |
+| `EventLogEntry`, `EntityLogEntry` | `AHSW.EventLog.Models.Entities` | `AHSW.EventLog.Contracts.Models.Entities` |
+| `PkEntity`, `ReadOnlyEntity`, `PropertyLogEntry` | `AHSW.EventLog.Models.Entities.Abstract` | `AHSW.EventLog.Contracts.Models.Entities.Abstract` |
+| Typed property log entries | `AHSW.EventLog.Models.Entities.PropertyLogEntries` | `AHSW.EventLog.Contracts.Models.Entities.PropertyLogEntries` |
+| `ActionType`, `EventStatus` | `AHSW.EventLog.Models.Enums` | `AHSW.EventLog.Contracts.Models.Enums` |
+| `FailureInfo` | `AHSW.EventLog.Models` | `AHSW.EventLog.Contracts.Models` |
+| `EventLogEntryExtensions` (`AddFailureInfo`) | `AHSW.EventLog.Extensions` | `AHSW.EventLog.Contracts.Extensions` |
+| `IEventLogConfigurator`, `IEntityConfigurator`, `IPropertyConfigurator` | `AHSW.EventLog.Interfaces.Configurators` | `AHSW.EventLog.Interfaces.Configuration` |
+| Concrete configuration classes | `AHSW.EventLog.Models.Configurations` | `AHSW.EventLog.Models.Configuration` |
+| `BaseDescriptiveEntity` | `AHSW.EventLog.Models.Entities.Abstract` | `AHSW.EventLog.Models.Entities.Abstracts` |
+
+`CreateEventScopeAndRun` now passes `IEventLogScope<TEventType, TEntityType, TPropertyType>` to its callback instead of `EventLogScope<TEventType, TEntityType, TPropertyType>`. `SaveAndLogEntitiesAsync` now passes `IEntityLogConfiguration<TEventType, TEntityType, TPropertyType>` instead of the concrete `EntityLogConfiguration`. Update explicitly typed delegates, method parameters, and custom service implementations accordingly; lambdas with inferred parameter types can retain their existing structure.
+
+Import `AHSW.EventLog.Contracts.Extensions` to call `AddFailureInfo`. Keep `AHSW.EventLog.Extensions` where you use the `AddEventLog` registration extension. Concrete configuration helpers and description-table entities remain in the implementation package.
 
 ## 1. Usage Example in Code  
 As an example, imagine the following code is an API endpoint that creates a domain model, **Book**, and saves it in storage.  
@@ -63,8 +113,7 @@ await services.EventLog.CreateEventScopeAndRun(
 		// Define tracked objects and define tracked properties
 		.AddEntityLogging(
 		    new[] { book },
-		    PropertyType.BookTitle,
-		    PropertyType.BookLikeCount));
+		    () => new[] { PropertyType.BookTitle, PropertyType.BookLikeCount }));
     });
 ```
 

@@ -1,8 +1,8 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using AHSW.EventLog.Interfaces;
-using AHSW.EventLog.Models.Entities;
+using AHSW.EventLog.Contracts.Interfaces;
+using AHSW.EventLog.Contracts.Models.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace AHSW.EventLog.Repositories;
