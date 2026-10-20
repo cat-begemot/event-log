@@ -8,19 +8,20 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 namespace AHSW.EventLog.Repositories.Configuration;
 
 public class EventLogEntryConfiguration<TEventType, TEntityType, TPropertyType> :
-    BaseConfiguration,
-    IEntityTypeConfiguration<EventLogEntry<TEventType, TEntityType, TPropertyType>>
+    BaseConfiguration<EventLogEntry<TEventType, TEntityType, TPropertyType>>
         where TEventType : struct, Enum
         where TEntityType : struct, Enum
         where TPropertyType : struct, Enum
 {
-    public void Configure(EntityTypeBuilder<EventLogEntry<TEventType, TEntityType, TPropertyType>> builder)
+    protected override string EventLogTableName => EventLogPersistenceConstants.EventLogTableName;
+
+    public EventLogEntryConfiguration(string schema)
+        : base(schema)
     {
-        builder
-            .ToTable(
-                EventLogPersistenceConstants.EventLogTableName,
-                EventLogPersistenceConstants.EventLogSchema);
-            
+    }
+
+    protected override void ConfigureEntity(EntityTypeBuilder<EventLogEntry<TEventType, TEntityType, TPropertyType>> builder)
+    {
         builder
             .HasMany(x => x.EntityLog)
             .WithOne(x => x.EventLogEntry)

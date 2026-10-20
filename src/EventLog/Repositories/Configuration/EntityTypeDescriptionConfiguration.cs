@@ -1,19 +1,21 @@
-﻿using AHSW.EventLog.Contracts.Models.Entities;
-using AHSW.EventLog.Models.Entities;
+﻿using AHSW.EventLog.Models.Entities;
+using AHSW.EventLog.Repositories.Configuration.Abstract;
 using AHSW.EventLog.Repositories.Constants;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace AHSW.EventLog.Repositories.Configuration;
 
 public class EntityTypeDescriptionConfiguration :
-    IEntityTypeConfiguration<EntityTypeDescription>
+    BaseConfiguration<EntityTypeDescription>
 {
-    public void Configure(EntityTypeBuilder<EntityTypeDescription> builder)
+    protected override string EventLogTableName => EventLogPersistenceConstants.EntityTypeDescriptionsTableName;
+
+    public EntityTypeDescriptionConfiguration(string schema)
+        : base(schema)
     {
-        builder
-            .ToTable(
-                EventLogPersistenceConstants.EntityTypeDescriptionsTableName,
-                EventLogPersistenceConstants.EventLogSchema);
+    }
+
+    protected override void ConfigureEntity(EntityTypeBuilder<EntityTypeDescription> builder)
+    {
     }
 }

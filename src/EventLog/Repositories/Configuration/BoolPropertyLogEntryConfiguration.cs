@@ -2,25 +2,25 @@ using System;
 using AHSW.EventLog.Contracts.Models.Entities.PropertyLogEntries;
 using AHSW.EventLog.Repositories.Configuration.Abstract;
 using AHSW.EventLog.Repositories.Constants;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace AHSW.EventLog.Repositories.Configuration;
 
 public class BoolPropertyLogEntryConfiguration<TEventType, TEntityType, TPropertyType> :
-    BaseConfiguration,
-    IEntityTypeConfiguration<BoolPropertyLogEntry<TEventType, TEntityType, TPropertyType>>
+    BaseConfiguration<BoolPropertyLogEntry<TEventType, TEntityType, TPropertyType>>
         where TEventType : struct, Enum
         where TEntityType : struct, Enum
         where TPropertyType : struct, Enum
 {
-    public void Configure(EntityTypeBuilder<BoolPropertyLogEntry<TEventType, TEntityType, TPropertyType>> builder)
+    protected override string EventLogTableName => EventLogPersistenceConstants.BoolPropertyLogTableName;
+
+    public BoolPropertyLogEntryConfiguration(string schema)
+        : base(schema)
     {
-        builder
-            .ToTable(
-                EventLogPersistenceConstants.BoolPropertyLogTableName,
-                EventLogPersistenceConstants.EventLogSchema);
-        
+    }
+
+    protected override void ConfigureEntity(EntityTypeBuilder<BoolPropertyLogEntry<TEventType, TEntityType, TPropertyType>> builder)
+    {
         MapEnumColumnType(builder.Property(x => x.PropertyType));
         
         builder.HasIndex(x => x.PropertyType);

@@ -1,21 +1,23 @@
 ﻿using System;
-using AHSW.EventLog.Contracts.Models.Entities;
 using AHSW.EventLog.Models.Entities;
+using AHSW.EventLog.Repositories.Configuration.Abstract;
 using AHSW.EventLog.Repositories.Constants;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace AHSW.EventLog.Repositories.Configuration;
 
 public class PropertyTypeDescriptionConfiguration<TPropertyType> :
-    IEntityTypeConfiguration<PropertyTypeDescription>
+    BaseConfiguration<PropertyTypeDescription>
         where TPropertyType : struct, Enum
 {
-    public void Configure(EntityTypeBuilder<PropertyTypeDescription> builder)
+    protected override string EventLogTableName => EventLogPersistenceConstants.PropertyTypeDescriptionsTableName;
+
+    public PropertyTypeDescriptionConfiguration(string schema)
+        : base(schema)
     {
-        builder
-            .ToTable(
-                EventLogPersistenceConstants.PropertyTypeDescriptionsTableName,
-                EventLogPersistenceConstants.EventLogSchema);
+    }
+
+    protected override void ConfigureEntity(EntityTypeBuilder<PropertyTypeDescription> builder)
+    {
     }
 }
